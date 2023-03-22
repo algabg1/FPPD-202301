@@ -13,24 +13,24 @@
 int a[TAM];
 int global_index = 0;
 int sum = 0;
-pthread_mutex_t mutex1; //declaraÁ„o do mutex | mutex1 È o objeto
+pthread_mutex_t mutex1; //declara√ß√£o do mutex | mutex1 √© o objeto
 
 void* slave(void* nenhum) {
 	int local_index, partial_sum = 0;
 	do {
 		pthread_mutex_lock(&mutex1);
-		//deu lock no objeto mutex1 | o local de memÛria do mutex1 n„o ta disponÌvel
+		//deu lock no objeto mutex1 | o local de mem√≥ria do mutex1 n√£o ta dispon√≠vel
 		local_index = global_index;
 		global_index++;
 		pthread_mutex_unlock(&mutex1);
-		//unlock no mutex1, agora o local de memÛria ta disponÌvel
+		//unlock no mutex1, agora o local de mem√≥ria ta dispon√≠vel
 
 		if (local_index < TAM) partial_sum += a[local_index];
 	} while (local_index < TAM); //vai fazer isso aqui 1000 x
 
-	pthread_mutex_lock(&mutex1); //lock no local de memÛria do mutex1
+	pthread_mutex_lock(&mutex1); //lock no local de mem√≥ria do mutex1
 	sum += partial_sum;
-	pthread_mutex_unlock(&mutex1); //unlock no local de memÛria do mutex1
+	pthread_mutex_unlock(&mutex1); //unlock no local de mem√≥ria do mutex1
 
 	return(NULL);
 }
@@ -42,21 +42,23 @@ main() {
 	pthread_mutex_init(&mutex1, NULL);
 	//inicializa a referencia pro local de memoria do mutex1
 
-	for (i = 0; i < TAM; i++) a[i] = i + 1;
 	//colocando valores no a[] de 1 a 1000
+	for (i = 0; i < TAM; i++) {
+		a[i] = i + 1;
+	}
 
 	for (i = 0; i < NTHREADS; i++) {
 		//cria o slave no local de memoria da thread[i] e ve se retorna 0
 		if (pthread_create(&thread[i], NULL, slave, NULL) != 0){
 			perror("pthread_create falhou!");
-			exit(1);
+			exit(-1);
 		}
 	}
 
 	for (i = 0; i < NTHREADS; i++) {
 		if (pthread_join(thread[i], NULL) != 0) {
 			perror("pthread_join falhou!");
-			exit(1);
+			exit(-2);
 		}
 	}
 
