@@ -4,7 +4,7 @@ cada uma das 10 threads fazendo com que as mesmas concorram entre
 si[OU SEJA, VC NAO PODE DIVIDIR O VETOR DE FORMA IGUALITARIA ENTRE
 AS THREADS]  para somar as posicoes do vetor sem repeticoes das
 posicoes do mesmo, cada thread soh pode somar uma posicao por vez,
-USE MUTEX. [No video da aula tem praticamente isso feito]
+USE MUTEX.
 Seu codigo deve, ALEM de expor o resultado final correto, imprimir
 quantas posicoes de soma cada thread foi responsavel [e eh aqui o
 problema real :D ]*/
@@ -38,12 +38,12 @@ void* thread_sum(void* arg) {
     for (i = thread_id; i < ARRAY_SIZE; i += NUM_THREADS) {
         pos = i;
         pthread_mutex_lock(mutex);
-        if (array[pos] != 0) { // Verifica se a posição já foi somada por outra thread
-            sum_per_thread[thread_id]--; // Se sim, desfaz a contagem dessa posição para essa thread
+        if (array[pos] != 0) { // Verifica se a posiÃ§Ã£o jÃ¡ foi somada por outra thread
+            sum_per_thread[thread_id]--; // Se sim, desfaz a contagem dessa posiÃ§Ã£o para essa thread
         }
         else {
             sum += pos;
-            array[pos] = 1; // Marca a posição como já somada
+            array[pos] = 1; // Marca a posiÃ§Ã£o como jÃ¡ somada
         }
         pthread_mutex_unlock(mutex);
     }
@@ -61,7 +61,7 @@ int main() {
     struct thread_data data[NUM_THREADS];
     pthread_mutex_t mutex;
 
-    // Preenche o vetor com números inteiros de 0 a ARRAY_SIZE-1
+    // Preenche o vetor com nÃºmeros inteiros de 0 a ARRAY_SIZE-1
     for (i = 0; i < ARRAY_SIZE; i++) {
         array[i] = i;
     }
@@ -89,7 +89,7 @@ int main() {
         }
     }
 
-    // Imprime o resultado final e as posições de soma de cada thread
+    // Imprime o resultado final e as posiÃ§Ãµes de soma de cada thread
     int total_sum = 0;
     printf("Soma final: ");
     for (i = 0; i < NUM_THREADS; i++) {
